@@ -20,7 +20,8 @@ public class Szpak extends PApplet {
     @Override
     public void settings() {
         size(700,600);
-        Apk.init(this,null,new KeyMap(),new MouseMap());
+        Apk.init(this,new Manager(1,1,1),new KeyMap(),new MouseMap());
+        Apk.manager.getPrinter().setBackgroundColor(0xFFE49739);
     }
 
     @Override

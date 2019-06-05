@@ -1,14 +1,13 @@
 package Model.snake;
 
+import Alvic.control.Controller;
 import Alvic.react.Carnal;
 import Alvic.react.body.RelativisticBody;
-import Alvic.control.KeyboardController;
 import Alvic.print.Visible;
 import Alvic.update.Alive;
 import Model.effect.Effect;
 import processing.core.PVector;
 
-import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,15 +20,13 @@ public class Snake implements Visible, Alive, Carnal {
     private SnakeOutfit outfit;
     private SnakeParameters parameters;
     private Set<Effect> effects;
-    private KeyboardController ctrl;
+    private Controller ctrl;
 
-    public Snake(KeyboardController ctrl, float headX, float headY, float momentumX, float momentumY) {
+    public Snake(Controller ctrl, float headX, float headY, float momentumX, float momentumY) {
         body = new SnakeBody(this,headX, headY, new PVector(momentumX, momentumY), 5);
         outfit = new SnakeOutfit(body);
         parameters = new SnakeParameters(this,4f,0.01f, 0, 0);
         effects = new HashSet<>();
-        ctrl.setKey(KeyEvent.VK_RIGHT,1);
-        ctrl.setKey(KeyEvent.VK_LEFT,2);
         this.ctrl = ctrl;
     }
 

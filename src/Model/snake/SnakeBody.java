@@ -61,7 +61,11 @@ public class SnakeBody implements Carnal {
                     food.loadEffect(snake.getEffects());
                     food.consumed();
                 }
-                else momentum.set(0,0);
+                else {
+                    momentum.set(0,0);
+                    snake.getOutfit().setSegmentsColor(40);
+                    snake.getOutfit().setHeadColor(50);
+                }
             }
             head.clearCollided();
         }

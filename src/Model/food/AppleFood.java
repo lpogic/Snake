@@ -43,7 +43,7 @@ public class AppleFood extends Food implements Alive {
                 break;
             case ROTTEN:
                 collector.add(new DrunkEffect( 2000, 0.5));
-                collector.add(new ColorEffect(2000, 0xFF64084E, 0xFF64084E));
+                collector.add(new ColorEffect(2000, 0xFF64084E, 0xFF3E1253));
         }
         super.loadEffect(collector);
 
