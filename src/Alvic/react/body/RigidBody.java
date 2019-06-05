@@ -62,6 +62,10 @@ public class RigidBody implements Body {
     private Set<Body> collided;
 
     public RigidBody(Carnal owner, float xPosition, float yPosition, Figure figure, float wrapperRadius){
+        this(owner, figure, new RoundFigure(new PVector(xPosition, yPosition), wrapperRadius));
+    }
+
+    public RigidBody(Carnal owner, Figure figure, RoundFigure wrapper){
         this.owner = owner;
         this.figure = figure;
         PVector[] vectors = figure.getInterVector();
@@ -75,9 +79,9 @@ public class RigidBody implements Body {
             offsets.add(new MVector(it));
         }
         rotation = 0;
-        position = new PVector(xPosition,yPosition);
+        position = wrapper.getOffset();
         figureSynchronized = false;
-        wrapper = new RoundFigure(position,wrapperRadius);
+        this.wrapper = wrapper;
         collided = new HashSet<>();
     }
 

@@ -26,4 +26,10 @@ public class KeyboardController implements Controller
         if (key == null) return false;
         return Apk.keyboard.isTyped(key);
     }
+
+    /*public Object least(){
+        while(Apk.keyboard.isScribed()){
+            Integer
+        }
+    }*/
 }

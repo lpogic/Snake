@@ -16,7 +16,7 @@ public class SnakeTail implements Carnal {
     private Deque<RigidBody> segments;
     private BodyComposite headCollidingSegments;
 
-    public SnakeTail(Snake snake, int headX, int headY, int segments) {
+    public SnakeTail(Snake snake, float headX, float headY, int segments) {
         this.snake = snake;
         this.segments = new ArrayDeque<>();
         headCollidingSegments = new BodyComposite(snake);

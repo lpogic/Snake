@@ -2,26 +2,32 @@ package Model.food;
 
 import Alvic.Apk;
 import Alvic.print.ImageOutfit;
+import Alvic.react.body.RelativisticBody;
 import Alvic.react.body.RigidBody;
+import Alvic.react.figure.RoundFigure;
 import Alvic.update.Alive;
 import Model.ImageDealer;
 import Model.Lottery;
 import Model.effect.Effect;
 import Model.effect.GrowEffect;
 import Model.snake.Snake;
+import Model.wall.Wall;
 import processing.core.PVector;
 
 import java.util.Collection;
+import java.util.List;
 
 public class FrogFood extends Food implements Alive {
+
+    public static final Object frogRadarDimension = new Object();
 
     private enum FrogState{
         SITTING, PUMPING, JUMPING, CONSUMED;
 
         boolean consumable(){return this == SITTING || this == PUMPING;}
-        boolean isReadyToJump(){return this == SITTING || this == PUMPING;}
     }
 
+    private RigidBody radar;
     private ImageOutfit sittingOutfit;
     private ImageOutfit pumpingOutfit;
     private ImageOutfit jumpingLeftOutfit;
@@ -34,6 +40,8 @@ public class FrogFood extends Food implements Alive {
     public FrogFood(FoodSupplier owner, float x, float y) {
         super(owner);
         setBody(RigidBody.newBall(this, 9, x, y));
+        radar = new RigidBody(this, new RoundFigure(new PVector(0,0), 25f),
+                new RoundFigure(getBody().getPosition(),25f));
         sittingOutfit = new ImageOutfit(getBody(), Apk.shop.deal(ImageDealer.sittingFrog));
         pumpingOutfit = new ImageOutfit(getBody(), Apk.shop.deal(ImageDealer.pumpingFrog));
         jumpingLeftOutfit = new ImageOutfit(getBody(), Apk.shop.deal(ImageDealer.jumpingFrogLeft));
@@ -66,16 +74,11 @@ public class FrogFood extends Food implements Alive {
     @Override
     public void update() {
         PVector temp;
+        if(radar.collide()){
+            stateLottery.setDrawChance(FrogState.JUMPING, 200);
+            radar.clearCollided();
+        } else stateLottery.setDrawChance(FrogState.JUMPING, 2);
         if(state == FrogState.SITTING){
-            if(Apk.shop.order(Snake.class)){
-                Snake snake = Apk.shop.deal(Snake.class);
-                if(PVector.sub(snake.getBody().getHead().getPosition(),
-                        getBody().getPosition()).magSq() < 1000f){
-                    Apk.debug("SNAKE!");
-                    stateLottery.setDrawChance(FrogState.JUMPING, 200);
-                } else stateLottery.setDrawChance(FrogState.JUMPING, 2);
-            } else stateLottery.setDrawChance(FrogState.JUMPING, 2);
-
             stateLottery.draw();
             switch (stateLottery.getLoot()){
                 case JUMPING:
@@ -98,6 +101,9 @@ public class FrogFood extends Food implements Alive {
                 getBody().setPosition(jumpTarget);
                 setOutfit(sittingOutfit);
                 state = FrogState.SITTING;
+                if(Apk.manager.getReactor().collide(RelativisticBody.builder(getBody()).addAffect(Wall.wallDimension).get())){
+                    consumed();
+                }
             } else {
                 temp.setMag(2.0f);
                 getBody().translate(temp);
@@ -109,5 +115,11 @@ public class FrogFood extends Food implements Alive {
                 state = FrogState.SITTING;
             }
         }
+    }
+
+    @Override
+    public void loadBody(List<RelativisticBody> collector) {
+        collector.add(RelativisticBody.builder(radar).addDwell(frogRadarDimension).get());
+        super.loadBody(collector);
     }
 }

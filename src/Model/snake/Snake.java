@@ -6,6 +6,7 @@ import Alvic.control.KeyboardController;
 import Alvic.print.Visible;
 import Alvic.update.Alive;
 import Model.effect.Effect;
+import processing.core.PVector;
 
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
@@ -22,8 +23,8 @@ public class Snake implements Visible, Alive, Carnal {
     private Set<Effect> effects;
     private KeyboardController ctrl;
 
-    public Snake(KeyboardController ctrl) {
-        body = new SnakeBody(this,100, 100, 5);
+    public Snake(KeyboardController ctrl, float headX, float headY, float momentumX, float momentumY) {
+        body = new SnakeBody(this,headX, headY, new PVector(momentumX, momentumY), 5);
         outfit = new SnakeOutfit(body);
         parameters = new SnakeParameters(this,4f,0.01f, 0, 0);
         effects = new HashSet<>();

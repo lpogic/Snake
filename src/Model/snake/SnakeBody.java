@@ -5,6 +5,7 @@ import Alvic.react.Carnal;
 import Alvic.react.body.RelativisticBody;
 import Alvic.react.body.RigidBody;
 import Model.food.Food;
+import Model.food.FrogFood;
 import processing.core.PVector;
 
 import java.util.*;
@@ -17,12 +18,12 @@ public class SnakeBody implements Carnal {
     private PVector inclination;
     private boolean turn;
 
-    public SnakeBody(Snake snake, int headX, int headY, int segments) {
+    public SnakeBody(Snake snake, float headX, float headY, PVector momentum, int segments) {
         this.snake = snake;
         head = RigidBody.newBall(snake,7,headX,headY);
         tail = new SnakeTail(snake,headX, headY, segments);
 
-        momentum = new PVector(4,0);
+        this.momentum = momentum;
         inclination = new PVector(0.01f,0);
         turn = false;
     }
@@ -46,9 +47,11 @@ public class SnakeBody implements Carnal {
     public void move(){
         PVector headStep = new PVector(momentum.x,momentum.y),
                 lastHeadPosition = new PVector(head.getPosition().x, head.getPosition().y);
-        headStep.rotate(inclination.x);
         if(turn)turn = false;
-        else inclination.rotate(0.2f);
+        else {
+            headStep.rotate(inclination.x);
+            inclination.rotate(0.2f);
+        }
         head.translate(headStep);
         tail.move(lastHeadPosition);
         if(head.collide()){
@@ -79,7 +82,7 @@ public class SnakeBody implements Carnal {
 
     @Override
     public void loadBody(List<RelativisticBody> list) {
-        list.add(new RelativisticBody.Builder(head).addDwell(Snake.headDimension).get());
+        list.add(new RelativisticBody.Builder(head).addDwell(Snake.headDimension).addAffect(FrogFood.frogRadarDimension).get());
         tail.loadBody(list);
     }
 }
